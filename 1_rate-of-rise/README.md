@@ -10,9 +10,12 @@ conda create -n stock-py37 python=3.7
 
 conda activate stock-py37
 
+
 ### Step 3) 라이브러리 설치
 
-pip install pandas
+pip install pandas==1.3.5
+pip install openpyxl==3.0.10
+pip install exchange_calendars==3.6.2
 
 ### (참고) 아나콘다 명령어 모음 (복사 붙여넣기 용도)
 
