@@ -2,6 +2,8 @@ import pandas as pd
 from tabulate import tabulate
 import os
 import warnings
+
+tabulate.WIDE_CHARS_MODE = False
 warnings.simplefilter("ignore")
 
 stock_file_list = os.listdir('./stock-data/2022-05')
@@ -21,6 +23,4 @@ merge_df = pd.merge(globals()['kospi_20220502'],
 
 merge_df['rate'] = round((1 - merge_df['종가_0502'] / merge_df['등락률_0503']) * 100, 2)
 
-print(merge_df)
-
-# print(tabulate(merge_df.head(), headers = 'keys', tablefmt = 'fancy_grid'))
+print(tabulate(merge_df.head(), headers = 'keys', tablefmt = 'pretty'))

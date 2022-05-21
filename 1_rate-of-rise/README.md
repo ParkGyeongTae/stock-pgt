@@ -17,6 +17,7 @@ pip install pandas==1.3.5
 pip install openpyxl==3.0.10
 pip install exchange_calendars==3.6.2
 pip install tabulate==0.8.9
+pip install tabulate[widechars]==
 
 ### (참고) 아나콘다 명령어 모음 (복사 붙여넣기 용도)
 
