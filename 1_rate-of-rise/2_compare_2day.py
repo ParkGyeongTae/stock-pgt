@@ -1,4 +1,5 @@
 import pandas as pd
+from tabulate import tabulate
 import os
 import warnings
 warnings.simplefilter("ignore")
@@ -18,15 +19,8 @@ merge_df = pd.merge(globals()['kospi_20220502'],
                     left_on = '종목명', 
                     right_on = '종목명')
 
-merge_df['종가비율'] = round((1 - merge_df['종가_0502'] / merge_df['종가_0503']) * 100, 2)
+merge_df['rate'] = round((1 - merge_df['종가_0502'] / merge_df['등락률_0503']) * 100, 2)
 
 print(merge_df)
 
-
-# print(len(file_list))
-
-# df = pd.read_excel('./stock-data/kospi_20220520.xlsx')
-
-# result = df[['종목명', '종가']]
-
-# print(result)
+# print(tabulate(merge_df.head(), headers = 'keys', tablefmt = 'fancy_grid'))
