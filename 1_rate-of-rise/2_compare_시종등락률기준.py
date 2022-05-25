@@ -9,9 +9,9 @@ warnings.simplefilter("ignore")
 stock_file_list = os.listdir('./stock-data/2022-05')
 stock_file_list.sort()
 
-start_date      = '20220513'
-end_date        = '20220516'
-evaluation_date = '20220517'
+start_date      = '20220504'
+end_date        = '20220506'
+evaluation_date = '20220509'
 
 for stock_file in stock_file_list:
     df = pd.read_excel(f'./stock-data/2022-05/{stock_file}')
