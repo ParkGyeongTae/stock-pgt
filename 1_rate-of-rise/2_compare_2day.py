@@ -21,6 +21,21 @@ merge_df = pd.merge(globals()['kospi_20220502'],
                     left_on = '종목명', 
                     right_on = '종목명')
 
-merge_df['rate'] = round((1 - merge_df['종가_0502'] / merge_df['등락률_0503']) * 100, 2)
+merge_df = pd.merge(merge_df, 
+                    globals()['kospi_20220504'], 
+                    how = 'left', 
+                    left_on = '종목명', 
+                    right_on = '종목명')
 
-print(tabulate(merge_df.head(), headers = 'keys', tablefmt = 'pretty'))
+merge_df['종가등락률'] = round((1 - merge_df['종가_0502'] / merge_df['종가_0503']) * 100, 2)
+
+merge_df = merge_df.sort_values(by = ['종가등락률'], ascending = False)
+
+print(tabulate(merge_df.head(10), headers = 'keys', tablefmt = 'pretty'))
+
+print('<<< Summary >>>')
+print('kospi_20220503 상위 10개의 합 :', merge_df['종가_0503'].head(10).sum())
+print('kospi_20220504 상위 10개의 합 :', merge_df['종가_0504'].head(10).sum())
+print('kospi_20220503 - kospi_20220504 :', merge_df['종가_0504'].head(10).sum() - merge_df['종가_0503'].head(10).sum(), 
+                                        round((merge_df['종가_0504'].head(10).sum() - merge_df['종가_0503'].head(10).sum()) 
+                                        / merge_df['종가_0503'].head(10).sum() * 100, 2))
