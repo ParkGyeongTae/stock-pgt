@@ -21,8 +21,8 @@ XKRX = ecals.get_calendar("XKRX")
 
 # 특정 날짜를 기준으로 다음 개장일과 다다음 개장일은 언제인가?
 
-date = '2022-05-04'
-format = '%Y-%m-%d'
+date = '20220504'
+format = '%Y%m%d'
 
 dt_date = datetime.datetime.strptime(date, format).strftime(format)
 st_date = XKRX.next_open(dt_date).strftime(format)
