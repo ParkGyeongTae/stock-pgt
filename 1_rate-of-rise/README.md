@@ -2,6 +2,8 @@
 
 ## 사용방법
 
+# http://data.krx.co.kr/contents/MDC/MDI/mdiLoader/index.cmd?menuId=MDC0201
+
 ### Step 1) 아나콘다 가상환경 만들기
 
 conda create -n stock-py37 python=3.7
