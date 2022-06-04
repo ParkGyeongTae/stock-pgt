@@ -1,77 +1,51 @@
 import pandas as pd
-from tabulate import tabulate
-import os
 import warnings
 import datetime
 import exchange_calendars as ecals 
 import sys
-
-day = sys.argv[1]
-
-XKRX = ecals.get_calendar("XKRX")
+from tabulate import tabulate
 
 tabulate.WIDE_CHARS_MODE = False
 warnings.simplefilter("ignore")
 
-stock_file_list = os.listdir('./stock-data/2022-05')
-stock_file_list.sort()
+select_day = sys.argv[1]
 
-# start_date = '20220509'
-start_date = day
-format = '%Y%m%d'
+XKRX = ecals.get_calendar("XKRX")
 
-dt_date = datetime.datetime.strptime(start_date, format).strftime(format)
+first_day = select_day
+format    = '%Y%m%d'
+
+dt_date = datetime.datetime.strptime(first_day, format).strftime(format)
 st_date = XKRX.next_open(dt_date).strftime(format)
-# dt_next_date = datetime.datetime.strptime(st_date, format)
-# st_next_date = XKRX.next_open(dt_next_date).strftime(format)
 
-end_date        = st_date
-# evaluation_date = st_next_date
+second_day = st_date
 
-# print(start_date)
-# print(end_date)
-# print(evaluation_date)
-# exit()
+df_first_day         = pd.read_excel(f'./stock-data/2022-05/kospi_{first_day}.xlsx')
+df_first_day         = df_first_day[['종목명', '시가', '종가', '고가', '등락률']]
+df_first_day.columns = ['종목명', f'시가_{first_day[4:8]}', f'종가_{first_day[4:8]}', f'고가_{first_day[4:8]}', f'등락률_{first_day[4:8]}']
 
-# for stock_file in stock_file_list:
-#     df = pd.read_excel(f'./stock-data/2022-05/{stock_file}')
-#     df = df[['종목명', '시가', '종가', '고가', '등락률']]
-#     df.columns = ['종목명', f'시가_{stock_file[10:14]}', f'종가_{stock_file[10:14]}', f'고가_{stock_file[10:14]}', f'등락률_{stock_file[10:14]}']
-#     globals()[f'{stock_file.split(".")[0]}'] = df
+df_second_date         = pd.read_excel(f'./stock-data/2022-05/kospi_{second_day}.xlsx')
+df_second_date         = df_second_date[['종목명', '시가', '종가', '고가', '등락률']]
+df_second_date.columns = ['종목명', f'시가_{second_day[4:8]}', f'종가_{second_day[4:8]}', f'고가_{second_day[4:8]}', f'등락률_{second_day[4:8]}']
 
-df_start_date         = pd.read_excel(f'./stock-data/2022-05/kospi_{start_date}.xlsx')
-df_start_date         = df_start_date[['종목명', '시가', '종가', '고가', '등락률']]
-df_start_date.columns = ['종목명', f'시가_{start_date[4:8]}', f'종가_{start_date[4:8]}', f'고가_{start_date[4:8]}', f'등락률_{start_date[4:8]}']
-
-# print(df_start_date.head(10))
-# exit()
-
-df_end_date         = pd.read_excel(f'./stock-data/2022-05/kospi_{end_date}.xlsx')
-df_end_date         = df_end_date[['종목명', '시가', '종가', '고가', '등락률']]
-df_end_date.columns = ['종목명', f'시가_{end_date[4:8]}', f'종가_{end_date[4:8]}', f'고가_{end_date[4:8]}', f'등락률_{end_date[4:8]}']
-
-merge_df = pd.merge(df_start_date, 
-                    df_end_date, 
-                    how = 'left', 
-                    left_on = '종목명', 
+merge_df = pd.merge(df_first_day,
+                    df_second_date,
+                    how      = 'left',
+                    left_on  = '종목명',
                     right_on = '종목명')
 
-# merge_df = pd.merge(merge_df, 
-#                     globals()[f'kospi_{evaluation_date}'], 
-#                     how = 'left', 
-#                     left_on = '종목명', 
-#                     right_on = '종목명')
-
-merge_df = merge_df.sort_values(by = [f'등락률_{start_date[4:]}'], ascending = False)
+merge_df = merge_df.sort_values(by = [f'등락률_{first_day[4:]}'], ascending = False)
 merge_df = merge_df.head(10)
 
-# print(f'등락률_{start_date[4:]}')
-print(tabulate(merge_df, headers = 'keys', tablefmt = 'pretty'))
-exit()
+sum_open_price = int(merge_df[f'시가_{second_day[4:]}'].sum())
+sum_high_price = int(merge_df[f'고가_{second_day[4:]}'].sum())
+
+result_open_high_price   = int(sum_high_price - sum_open_price)
+result_open_high_percent = round((merge_df[f'고가_{second_day[4:]}'].head(10).sum() - merge_df[f'시가_{second_day[4:]}'].head(10).sum()) / merge_df[f'시가_{second_day[4:]}'].head(10).sum() * 100, 2)
 
 print('<<< Summary >>>')
-print(f'{end_date} 상위 10개 시가합 :', merge_df[f'시가_{end_date[4:]}'].head(10).sum()), '원'
-print(f'{end_date} 상위 10개 고가합 :', merge_df[f'고가_{end_date[4:]}'].head(10).sum()), '원'
-print(f'{end_date} - {end_date} :', merge_df[f'고가_{end_date[4:]}'].head(10).sum() - merge_df[f'시가_{end_date[4:]}'].head(10).sum(), '원', 
-                                        round((merge_df[f'고가_{end_date[4:]}'].head(10).sum() - merge_df[f'시가_{end_date[4:]}'].head(10).sum()) 
-                                        / merge_df[f'시가_{end_date[4:]}'].head(10).sum() * 100, 2), '%')
+print(f'{second_day} 상위 10개 시가합 : {sum_open_price}원 | {second_day} 상위 10개 고가합 : {sum_high_price}원')
+# print(f'{second_day} 상위 10개 고가합 : {sum_high_price} 원')
+print(f'{second_day} - {second_day} : {result_open_high_price}원', 
+                                        round((merge_df[f'고가_{second_day[4:]}'].head(10).sum() - merge_df[f'시가_{second_day[4:]}'].head(10).sum()) 
+                                        / merge_df[f'시가_{second_day[4:]}'].head(10).sum() * 100, 2), '%')
