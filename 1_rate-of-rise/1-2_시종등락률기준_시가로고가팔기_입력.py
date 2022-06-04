@@ -41,11 +41,6 @@ sum_open_price = int(merge_df[f'시가_{second_day[4:]}'].sum())
 sum_high_price = int(merge_df[f'고가_{second_day[4:]}'].sum())
 
 result_open_high_price   = int(sum_high_price - sum_open_price)
-result_open_high_percent = round((merge_df[f'고가_{second_day[4:]}'].head(10).sum() - merge_df[f'시가_{second_day[4:]}'].head(10).sum()) / merge_df[f'시가_{second_day[4:]}'].head(10).sum() * 100, 2)
+result_open_high_percent = round((sum_high_price - sum_open_price) / sum_open_price * 100, 2)
 
-print('<<< Summary >>>')
-print(f'{second_day} 상위 10개 시가합 : {sum_open_price}원 | {second_day} 상위 10개 고가합 : {sum_high_price}원')
-# print(f'{second_day} 상위 10개 고가합 : {sum_high_price} 원')
-print(f'{second_day} - {second_day} : {result_open_high_price}원', 
-                                        round((merge_df[f'고가_{second_day[4:]}'].head(10).sum() - merge_df[f'시가_{second_day[4:]}'].head(10).sum()) 
-                                        / merge_df[f'시가_{second_day[4:]}'].head(10).sum() * 100, 2), '%')
+print(f'{second_day} 상위10개 시가 : {sum_open_price}원 | {second_day} 상위10개 고가 : {sum_high_price}원 | 이익 : {result_open_high_price}원({result_open_high_percent})%')
