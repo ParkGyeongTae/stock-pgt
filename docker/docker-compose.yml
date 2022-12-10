@@ -1,9 +1,5 @@
 version: '2'
 
-volumes:
-  postgresql-data:
-  pgadmin-data:
-
 services:
     redis:
         hostname: redis

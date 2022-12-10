@@ -1,8 +1,6 @@
-FROM apache/airflow:2.4.1-python3.8
+FROM ubuntu:18.04
 
-USER root
-
-# ENV DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
     python -m pip install --upgrade pip

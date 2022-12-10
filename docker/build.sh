@@ -2,7 +2,7 @@
 
 source ./.env
 
-IMAGE_NAME_TAG=$IMAGE_NAME_AIRFOW:$IMAGE_NAME_AIRFOW_TAG
+IMAGE_NAME_TAG=$IMAGE_NAME_PYTHON:$IMAGE_NAME_PYTHON_TAG
 
 if [[ "$(docker container ls -a --filter="status=exited" -q 2> /dev/null)" != "" ]]; then
     docker rm $(docker container ls -a --filter="status=exited" -q)
