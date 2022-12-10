@@ -5,6 +5,8 @@ services:
         hostname: mysql
         container_name: mysql
         image: ${IMAGE_NAME_MYSQL}:${IMAGE_NAME_MYSQL_TAG}
+        volumes:
+            - ./my.cnf:/etc/mysql/conf.d/my.cnf
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: stock
